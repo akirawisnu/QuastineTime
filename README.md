@@ -25,7 +25,8 @@ All components run locally on your machine. No cloud calls are made.
 # Running the App (End Users)
 ✅ Requirements
 
-Windows 10 or newer (64-bit) (for standalone), or pure Python console and requirements installed
+Windows 10 or newer (64-bit) (for standalone), 
+or pure Python console and requirements for Linux / OSX / Android
 
 ▶️ Run the Standalone EXE
 - No admin rights required
