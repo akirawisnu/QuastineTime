@@ -61,7 +61,8 @@ transcribe_text\
 
 This ensures the app works even on restricted corporate or university laptops.
 
-🛠️ Developer Setup (Python Source)
+# Developer Setup (Python Source)
+
 1️⃣ Clone the Repository
 git clone https://github.com/<your-username>/QuastionTime.git
 cd QuastionTime
