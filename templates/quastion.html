@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuastionTime - Qualitative Interview Transcriber</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+        
+        .panel {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .panel h2 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        label {
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        select, button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        select {
+            background: rgba(255,255,255,0.9);
+            flex: 1;
+        }
+        
+        button {
+            background: #27ae60;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .file-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .file-item:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .file-item.selected {
+            background: rgba(52, 152, 219, 0.5);
+            border: 2px solid #3498db;
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .file-meta {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .log-container {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .log-success { color: #2ecc71; }
+        .log-error { color: #e74c3c; }
+        .log-info { color: #3498db; }
+        .log-warning { color: #f39c12; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            opacity: 0.8;
+        }
+        
+        .batch-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 QuastionTime</h1>
+            <p class="subtitle">Qualitative Interview Transcriber with AI Analysis</p>
+        </header>
+        
+        <div class="main-grid">
+            <div class="panel">
+                <h2>🎙️ Audio Files</h2>
+                
+                <div class="controls">
+                    <div class="control-row">
+                        <label>Language:</label>
+                        <select id="languageSelect">
+                            <option value="auto" selected>Auto-detect</option>
+                            <option value="en">English</option>
+                            <option value="de">German</option>
+                            <option value="id">Indonesian</option>
+                            <option value="zh">Mandarin Chinese</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-row">
+                        <label>Model Size:</label>
+                        <select id="modelSelect">
+                            <option value="tiny">Tiny (fastest)</option>
+                            <option value="base" selected>Base (balanced)</option>
+                            <option value="small">Small (better quality)</option>
+                            <option value="medium">Medium (high quality)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="batch-controls">
+                    <button onclick="selectAll()">Select All</button>
+                    <button onclick="deselectAll()">Deselect All</button>
+                    <button onclick="transcribeSelected()" id="transcribeBtn">Transcribe Selected</button>
+                </div>
+                
+                <div class="file-list" id="fileList">
+                    <p style="text-align: center; opacity: 0.7;">Loading audio files...</p>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2>⚙️ Processing Status</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalFiles">0</div>
+                        <div class="stat-label">Total Files</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="selectedFiles">0</div>
+                        <div class="stat-label">Selected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedFiles">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill">0%</div>
+                    </div>
+                </div>
+                
+                <div class="log-container" id="logContainer">
+                    <div class="log-entry log-info">Ready to transcribe audio files...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>📄 Completed Transcriptions</h2>
+            <div class="file-list" id="transcriptionList">
+                <p style="text-align: center; opacity: 0.7;">No transcriptions yet...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let audioFiles = [];
+        let selectedFiles = new Set();
+        
+        async function loadAudioFiles() {
+            try {
+                const response = await fetch('/api/audio-files');
+                audioFiles = await response.json();
+                displayAudioFiles();
+                updateStats();
+                loadTranscriptions();
+            } catch (error) {
+                addLog('Error loading audio files: ' + error.message, 'error');
+            }
+        }
+        
+        function displayAudioFiles() {
+            const container = document.getElementById('fileList');
+            
+            if (audioFiles.length === 0) {
+                container.innerHTML = '<p style="text-align: center; opacity: 0.7;">No audio files found in Audio folder</p>';
+                return;
+            }
+            
+            container.innerHTML = audioFiles.map((file, index) => `
+                <div class="file-item" id="file-${index}">
+                    <div class="file-info">
+                        <div class="file-name">🎵 ${file.filename}</div>
+                        <div class="file-meta">
+                            Size: ${(file.size / 1024 / 1024).toFixed(2)} MB | 
+                            Modified: ${new Date(file.modified).toLocaleDateString()}
+                        </div>
+                    </div>
+                    <input type="checkbox" class="checkbox" 
+                           onchange="toggleFileSelection(${index})" 
+                           id="check-${index}">
+                </div>
+            `).join('');
+        }
+        
+        function toggleFileSelection(index) {
+            const checkbox = document.getElementById(`check-${index}`);
+            const fileItem = document.getElementById(`file-${index}`);
+            
+            if (checkbox.checked) {
+                selectedFiles.add(index);
+                fileItem.classList.add('selected');
+            } else {
+                selectedFiles.delete(index);
+                fileItem.classList.remove('selected');
+            }
+            
+            updateStats();
+        }
+        
+        function selectAll() {
+            audioFiles.forEach((_, index) => {
+                selectedFiles.add(index);
+                document.getElementById(`check-${index}`).checked = true;
+                document.getElementById(`file-${index}`).classList.add('selected');
+            });
+            updateStats();
+        }
+        
+        function deselectAll() {
+            selectedFiles.clear();
+            audioFiles.forEach((_, index) => {
+                document.getElementById(`check-${index}`).checked = false;
+                document.getElementById(`file-${index}`).classList.remove('selected');
+            });
+            updateStats();
+        }
+        
+        function updateStats() {
+            document.getElementById('totalFiles').textContent = audioFiles.length;
+            document.getElementById('selectedFiles').textContent = selectedFiles.size;
+        }
+        
+        async function transcribeSelected() {
+            if (selectedFiles.size === 0) {
+                addLog('Please select at least one file to transcribe', 'warning');
+                return;
+            }
+            
+            const files = Array.from(selectedFiles).map(index => audioFiles[index]);
+            const language = document.getElementById('languageSelect').value;
+            const modelSize = document.getElementById('modelSelect').value;
+            const batchMode = files.length > 1;
+            
+            document.getElementById('transcribeBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'block';
+            
+            addLog(`Starting transcription of ${files.length} file(s)...`, 'info');
+            addLog(`Language: ${language}, Model: ${modelSize}, Batch mode: ${batchMode}`, 'info');
+            
+            try {
+                const response = await fetch('/api/transcribe', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        files: files,
+                        language: language,
+                        model_size: modelSize,
+                        batch: batchMode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                let completed = 0;
+                data.results.forEach(result => {
+                    if (result.status === 'success') {
+                        completed++;
+                        addLog(`✅ ${result.filename}: Transcribed (${result.language}, ${result.duration.toFixed(1)}s)`, 'success');
+                    } else if (result.status === 'skipped') {
+                        addLog(`⏭️ ${result.filename}: ${result.message}`, 'warning');
+                    } else {
+                        addLog(`❌ ${result.filename}: ${result.message}`, 'error');
+                    }
+                    
+                    const progress = ((data.results.indexOf(result) + 1) / data.results.length) * 100;
+                    updateProgress(progress);
+                });
+                
+                document.getElementById('completedFiles').textContent = completed;
+                addLog(`Batch processing complete! ${completed} files transcribed.`, 'success');
+                
+                // Reload transcriptions list
+                loadTranscriptions();
+                
+            } catch (error) {
+                addLog('Error during transcription: ' + error.message, 'error');
+            } finally {
+                document.getElementById('transcribeBtn').disabled = false;
+                setTimeout(() => {
+                    document.getElementById('progressContainer').style.display = 'none';
+                    updateProgress(0);
+                }, 3000);
+            }
+        }
+        
+        function updateProgress(percent) {
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percent + '%';
+            fill.textContent = Math.round(percent) + '%';
+        }
+        
+        function addLog(message, type = 'info') {
+            const container = document.getElementById('logContainer');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function loadTranscriptions() {
+            try {
+                const response = await fetch('/api/transcriptions');
+                const transcriptions = await response.json();
+                
+                const container = document.getElementById('transcriptionList');
+                
+                if (transcriptions.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; opacity: 0.7;">No transcriptions yet...</p>';
+                    return;
+                }
+                
+                container.innerHTML = transcriptions.map(trans => {
+                    const basename = trans.filename.replace('.srt', '');
+                    return `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <div class="file-name">📝 ${trans.filename}</div>
+                                <div class="file-meta">Created: ${new Date(trans.modified).toLocaleString()}</div>
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <button onclick="downloadFile('transcribe_text/${trans.filename}')">SRT</button>
+                                <button onclick="downloadFile('transcribe_text/${basename}.txt')">TXT</button>
+                                <button onclick="downloadFile('Summary/${basename}_summary.txt')">Summary</button>
+                                <button onclick="downloadFile('Statistics/${basename}_stats.csv')">CSV</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                addLog('Error loading transcriptions: ' + error.message, 'error');
+            }
+        }
+        
+        function downloadFile(filepath) {
+            window.open(`/api/download/${filepath}`, '_blank');
+        }
+        
+        // Initialize
+        loadAudioFiles();
+        setInterval(loadTranscriptions, 10000); // Refresh every 10 seconds
+    </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Flask>=2.3.0
+openai-whisper>=20231117
+nltk>=3.8.1
+scikit-learn>=1.3.0
+pandas>=2.0.0
+torch>=2.0.0
+torchaudio>=2.0.0
+numpy>=1.24.0
