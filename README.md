@@ -1,4 +1,4 @@
-# QuastionTime 🎧📝
+# QuastionTime
 Free Qualitative tools for researcher - Fully Automated Multi-lingual Audio Transcriber and Natural Language Processing Tools using Whisper OpenAI Model
 
 Local Audio Transcription & Text Analysis App (Standalone, No Admin Required)
@@ -6,11 +6,11 @@ Local Audio Transcription & Text Analysis App (Standalone, No Admin Required)
 QuastionTime is a local Flask-based desktop web app for audio transcription and downstream text analysis using OpenAI Whisper, NLTK, and Python.
 It runs entirely offline, uses a bundled FFmpeg, and can be distributed as a single Windows .exe that requires no admin privileges.
 
-✨ Features
-🎙️ Audio transcription using OpenAI Whisper (CPU-based)
-🧠 Text preprocessing and stopword handling (NLTK)
+# Features
+- Audio transcription using OpenAI Whisper (CPU-based)
+- Text preprocessing and stopword handling (NLTK)
 
-📊 Automatic generation of:
+# Automatic generation of:
 - Transcription text
 - Summary files
 - Statistics outputs
@@ -18,20 +18,11 @@ It runs entirely offline, uses a bundled FFmpeg, and can be distributed as a sin
 Local web interface (Flask), Fully offline after installation, No system FFmpeg installation required and Works on locked-down laptops (no admin access)
 
 # Architecture Overview
-User Browser
-   ↓
-Local Flask Server (127.0.0.1)
-   ↓
-Whisper Transcription Engine
-   ↓
-Text Processing (NLTK)
-   ↓
-Local Output Files (Audio / Summary / Statistics)
-
+User Browser -> Local Flask Server (127.0.0.1) -> Whisper Transcription Engine -> Text Processing (NLTK) -> Local Output Files (Audio / Summary / Statistics)
 
 All components run locally on your machine. No cloud calls are made.
 
-🚀 Running the App (End Users)
+# Running the App (End Users)
 ✅ Requirements
 
 Windows 10 or newer (64-bit) (for standalone), or pure Python console and requirements installed
@@ -45,6 +36,7 @@ Copy QuastionTime.exe to a writable folder, for example:
 - Documents
 - Downloads
 - Double-click QuastionTime.exe
+
 Open your browser and go to:
 http://127.0.0.1:5000
 
@@ -107,14 +99,12 @@ Suitable for sensitive or confidential audio
 
 🤝 Acknowledgements
 
-OpenAI Whisper
-PyTorch
-FFmpeg
-NLTK
-Flask
-PyInstaller
-
-📬 Support
+- OpenAI Whisper
+- PyTorch
+- FFmpeg
+- NLTK
+- Flask
+- PyInstaller
 
 If you encounter issues:
 
