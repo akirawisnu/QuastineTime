@@ -64,11 +64,14 @@ This ensures the app works even on restricted corporate or university laptops.
 # Developer Setup (Python Source)
 
 1️⃣ Clone the Repository
-git clone https://github.com/<your-username>/QuastionTime.git
+git clone https://github.com/akirawisnu/QuastionTime.git
+
 cd QuastionTime
 
 2️⃣ Create Virtual Environment
+
 py -m venv .venv
+
 .\.venv\Scripts\activate
 
 3️⃣ Install Dependencies
