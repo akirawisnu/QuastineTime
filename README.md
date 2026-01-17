@@ -7,28 +7,17 @@ QuastionTime is a local Flask-based desktop web app for audio transcription and 
 It runs entirely offline, uses a bundled FFmpeg, and can be distributed as a single Windows .exe that requires no admin privileges.
 
 ✨ Features
-
 🎙️ Audio transcription using OpenAI Whisper (CPU-based)
-
 🧠 Text preprocessing and stopword handling (NLTK)
 
 📊 Automatic generation of:
+- Transcription text
+- Summary files
+- Statistics outputs
 
-Transcription text
+Local web interface (Flask), Fully offline after installation, No system FFmpeg installation required and Works on locked-down laptops (no admin access)
 
-Summary files
-
-Statistics outputs
-
-🌐 Local web interface (Flask)
-
-🔒 Fully offline after installation
-
-🚫 No system FFmpeg installation required
-
-🖥️ Works on locked-down laptops (no admin access)
-
-🧩 Architecture Overview
+# Architecture Overview
 User Browser
    ↓
 Local Flask Server (127.0.0.1)
@@ -45,26 +34,18 @@ All components run locally on your machine. No cloud calls are made.
 🚀 Running the App (End Users)
 ✅ Requirements
 
-Windows 10 or newer (64-bit)
-
-No admin rights required
-
-No Python installation required
+Windows 10 or newer (64-bit) (for standalone), or pure Python console and requirements installed
 
 ▶️ Run the Standalone EXE
+- No admin rights required
+- No Python installation required
 
 Copy QuastionTime.exe to a writable folder, for example:
-
-Desktop
-
-Documents
-
-Downloads
-
-Double-click QuastionTime.exe
-
+- Desktop
+- Documents
+- Downloads
+- Double-click QuastionTime.exe
 Open your browser and go to:
-
 http://127.0.0.1:5000
 
 
@@ -119,9 +100,7 @@ CPU-only Whisper (no GPU acceleration)
 🔐 Security & Privacy
 
 No internet connection required after build
-
 No data is uploaded anywhere
-
 All processing happens locally
 
 Suitable for sensitive or confidential audio
@@ -129,15 +108,10 @@ Suitable for sensitive or confidential audio
 🤝 Acknowledgements
 
 OpenAI Whisper
-
 PyTorch
-
 FFmpeg
-
 NLTK
-
 Flask
-
 PyInstaller
 
 📬 Support
@@ -145,7 +119,5 @@ PyInstaller
 If you encounter issues:
 
 Ensure you are using 127.0.0.1 and not a public IP
-
 Ensure the app is located in a writable folder
-
 Check console output if using a console-enabled build
